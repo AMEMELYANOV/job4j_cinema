@@ -27,7 +27,7 @@ class PostgresUserRepositoryTest {
     /**
      * Очистка таблицы users, выполняется после каждого теста.
      *
-     * @throws SQLException
+     * @throws SQLException если происходит ошибка доступа к базе данных
      */
     @AfterEach
     public void wipeTable() throws SQLException {

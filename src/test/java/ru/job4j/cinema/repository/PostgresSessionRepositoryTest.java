@@ -33,7 +33,7 @@ class PostgresSessionRepositoryTest {
     /**
      * Очистка таблицы sessions, выполняется после каждого теста.
      *
-     * @throws SQLException
+     * @throws SQLException если происходит ошибка доступа к базе данных
      */
     @AfterEach
     public void wipeTable() throws SQLException {
