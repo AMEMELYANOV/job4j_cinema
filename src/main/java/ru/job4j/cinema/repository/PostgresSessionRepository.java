@@ -1,6 +1,7 @@
 package ru.job4j.cinema.repository;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Repository;
 import ru.job4j.cinema.model.Session;
 
 import javax.sql.DataSource;
@@ -19,6 +20,7 @@ import java.util.Optional;
  * @version 1.0
  */
 @Slf4j
+@Repository
 public class PostgresSessionRepository implements SessionRepository {
 
     /**
@@ -28,7 +30,8 @@ public class PostgresSessionRepository implements SessionRepository {
             SELECT
                 id,
                 name,
-                description
+                description,
+                posterName
             FROM sessions
             """;
 
@@ -43,14 +46,14 @@ public class PostgresSessionRepository implements SessionRepository {
      * SQL запрос по добавлению строк в таблицу sessions
      */
     private static final String INSERT_INTO = """
-            INSERT INTO sessions(name, description) VALUES (?, ?)
+            INSERT INTO sessions(name, description, posterName) VALUES (?, ?, ?)
             """;
 
     /**
      * SQL запрос по обновлению данных сеанса в таблице sessions
      */
     private static final String UPDATE = """
-            UPDATE sessions SET name = ?, description = ?
+            UPDATE sessions SET name = ?, description = ?, posterName = ?
             WHERE id = ?
             """;
 
@@ -136,6 +139,7 @@ public class PostgresSessionRepository implements SessionRepository {
         ) {
             ps.setString(1, session.getName());
             ps.setString(2, session.getDescription());
+            ps.setString(3, session.getPosterName());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
@@ -161,7 +165,8 @@ public class PostgresSessionRepository implements SessionRepository {
         ) {
             ps.setString(1, session.getName());
             ps.setString(2, session.getDescription());
-            ps.setInt(3, session.getId());
+            ps.setString(3, session.getPosterName());
+            ps.setInt(4, session.getId());
             ps.execute();
         } catch (Exception e) {
             log.info("Исключение в методе update() класса PostgresSessionRepository ", e);
@@ -201,6 +206,6 @@ public class PostgresSessionRepository implements SessionRepository {
      */
     private static Session getUserFromResultSet(ResultSet it) throws SQLException {
         return new Session(it.getInt("id"), it.getString("name"),
-                it.getString("description"));
+                it.getString("description"), it.getString("posterName"));
     }
 }

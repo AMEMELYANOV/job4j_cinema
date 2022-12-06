@@ -1,6 +1,7 @@
 package ru.job4j.cinema.repository;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Repository;
 import ru.job4j.cinema.model.User;
 
 import javax.sql.DataSource;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
+@Repository
 public class PostgresUserRepository implements UserRepository {
 
     /**

@@ -1,6 +1,7 @@
 package ru.job4j.cinema.repository;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Repository;
 import ru.job4j.cinema.model.Session;
 import ru.job4j.cinema.model.Ticket;
 import ru.job4j.cinema.model.User;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
+@Repository
 public class PostgresTicketRepository implements TicketRepository {
 
     /**
@@ -219,7 +221,8 @@ public class PostgresTicketRepository implements TicketRepository {
         return new Ticket(it.getInt("id"),
                 new Session(it.getInt("session_id"),
                         it.getString("name"),
-                        it.getString("description")
+                        it.getString("description"),
+                        it.getString("posterName")
                 ),
                 it.getInt("pos_row"),
                 it.getInt("cell"),

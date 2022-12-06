@@ -30,4 +30,9 @@ public class Session {
      * Подробное описание сеанса
      */
     private String description;
+
+    /**
+     * Постер сеанса
+     */
+    private String posterName;
 }

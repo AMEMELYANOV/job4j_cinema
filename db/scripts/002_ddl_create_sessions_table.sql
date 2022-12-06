@@ -1,7 +1,8 @@
 CREATE TABLE IF NOT EXISTS sessions (
   id SERIAL PRIMARY KEY,
   name VARCHAR NOT NULL,
-  description TEXT
+  description TEXT,
+  postername VARCHAR
 );
 
 COMMENT ON TABLE sessions IS 'Сеансы';
