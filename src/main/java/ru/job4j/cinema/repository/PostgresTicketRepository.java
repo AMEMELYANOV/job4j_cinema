@@ -15,6 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Реализация хранилища билетов
+ * @see ru.job4j.cinema.model.Ticket
+ * @author Alexander Emelyanov
+ * @version 1.0
+ */
 @Slf4j
 @Repository
 public class PostgresTicketRepository implements TicketRepository {
