@@ -24,7 +24,7 @@ public class SessionController {
     public String getSessionHall(@RequestParam(value = "sessionId") Integer sessionId,
                         Model model, HttpServletRequest req) {
         Optional<Session> sessionFromDB = sessionService.findById(sessionId);
-        model.addAttribute("session", sessionFromDB
+        model.addAttribute("sess", sessionFromDB
                 .orElseThrow(() -> new NoSuchElementException("Сеанс не найден")));
         model.addAttribute("user", UserUtil.getSessionUser(req));
         return "sessionHall";
