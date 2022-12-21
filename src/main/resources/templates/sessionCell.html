@@ -52,7 +52,7 @@
 <div class="container">
     <div class="card" style="width: 100%">
         <div class="card-header">
-            Кинозал
+            <span th:text="'Киносеанс:  '+${sess.name}"></span>
         </div>
         <div class="card-body">
             <div class="row justify-content-center">
@@ -60,20 +60,26 @@
                     <img class="img-thumbnail" src="/img/sessionHall.png">
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="card" style="width: 100%">
+        <div class="card-body justify-content-right ml-3">
             <div class="row">
-                Выберите ряд:
-            </div>
-            <div class="row">
-                <form th:action="@{/chooseCell}" method="POST" th:object="${ticket}">
+                <form th:action="@{/sessionCell}" method="POST" th:object="${ticket}">
                     <div class="form-group">
                         <label for="row">Ряд</label>
                         <select class="form-control" id="row" name="row">
-                            <option selected>Выберите ряд</option>
+                            <option selected>Выберите место</option>
                             <option th:each="row : ${rows}" th:value="${row}" th:text="${row}+' ряд'"></option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Перейти к выбору места</button>
+                    <button type="submit" class="btn btn-primary">Бронирование билета</button>
                 </form>
+            </div>
+            <div class="row mt-5">
+                <span>Для выбора доступны только свободные места</span>
             </div>
         </div>
     </div>

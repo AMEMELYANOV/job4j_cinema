@@ -9,6 +9,7 @@ import ru.job4j.cinema.service.ImplSessionService;
 import ru.job4j.cinema.util.UserUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -20,14 +21,17 @@ public class SessionController {
         this.sessionService = sessionService;
     }
 
-    @GetMapping("/sessionHall{sessionId}")
+    @GetMapping("/sessionRow{sessionId}")
     public String getSessionHall(@RequestParam(value = "sessionId") Integer sessionId,
                         Model model, HttpServletRequest req) {
         Optional<Session> sessionFromDB = sessionService.findById(sessionId);
         model.addAttribute("sess", sessionFromDB
                 .orElseThrow(() -> new NoSuchElementException("Сеанс не найден")));
         model.addAttribute("user", UserUtil.getSessionUser(req));
-        return "sessionHall";
+
+        model.addAttribute("rows", List.of(1, 2, 3, 4, 5, 6, 7));
+
+        return "sessionRow";
     }
 
 }
