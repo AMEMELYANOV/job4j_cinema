@@ -24,7 +24,7 @@ public class Ticket {
     /**
      * Сеанс билета
      */
-    private Session session;
+    private Show show;
 
     /**
      * Номер ряда билета

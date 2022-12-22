@@ -2,7 +2,7 @@ package ru.job4j.cinema.repository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import ru.job4j.cinema.model.Session;
+import ru.job4j.cinema.model.Show;
 import ru.job4j.cinema.model.Ticket;
 import ru.job4j.cinema.model.User;
 
@@ -27,24 +27,25 @@ public class PostgresTicketRepository implements TicketRepository {
 
     /**
      * SQL запрос по выбору всех билетов из таблицы tickets, при выполнении
-     * запроса выполняется внутреннее соединение с таблицами sessions и users
+     * запроса выполняется внутреннее соединение с таблицами show и users
      */
     private static final String FIND_ALL_SELECT = """ 
             SELECT
                 t.id,
-                t.session_id,
+                t.show_id,
                 t.pos_row,
                 t.cell,
                 t.user_id,
                 s.name,
                 s.description,
+                s.postername,
                 u.username,
                 u.email,
                 u.phone,
                 u.password
             FROM tickets t
-            JOIN sessions s
-                ON t.session_id = s.id
+            JOIN shows s
+                ON t.show_id = s.id
             JOIN users u
                 ON t.user_id = u.id
             """;
@@ -60,7 +61,7 @@ public class PostgresTicketRepository implements TicketRepository {
      * SQL запрос по добавлению строк в таблицу tickets
      */
     private static final String INSERT_INTO = """
-            INSERT INTO tickets(session_id, pos_row, cell,
+            INSERT INTO tickets(show_id, pos_row, cell,
             user_id) VALUES (?, ?, ?, ?)
             """;
 
@@ -68,7 +69,7 @@ public class PostgresTicketRepository implements TicketRepository {
      * SQL запрос по обновлению данных билета в таблице tickets
      */
     private static final String UPDATE = """
-            UPDATE tickets SET session_id = ?, pos_row = ?, cell = ?,
+            UPDATE tickets SET show_id = ?, pos_row = ?, cell = ?,
             user_id = ? WHERE id = ?
             """;
 
@@ -142,7 +143,7 @@ public class PostgresTicketRepository implements TicketRepository {
     /**
      * Выполняет сохранение билета. При успешном сохранении возвращает Optional с
      * объектом билета, у которого проинициализировано id. Иначе возвращает Optional.empty()
-     * Сохранение не произойдет, если уникальный набор из session, pos_row и cell использовались
+     * Сохранение не произойдет, если уникальный набор из show, pos_row и cell использовались
      * при сохранении в другом билете.
      *
      * @param ticket сохраняемый билет
@@ -154,7 +155,7 @@ public class PostgresTicketRepository implements TicketRepository {
              PreparedStatement ps = cn.prepareStatement(INSERT_INTO,
                      PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
-            ps.setInt(1, ticket.getSession().getId());
+            ps.setInt(1, ticket.getShow().getId());
             ps.setInt(2, ticket.getPosRow());
             ps.setInt(3, ticket.getCell());
             ps.setInt(4, ticket.getUser().getId());
@@ -181,7 +182,7 @@ public class PostgresTicketRepository implements TicketRepository {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(UPDATE)
         ) {
-            ps.setInt(1, ticket.getSession().getId());
+            ps.setInt(1, ticket.getShow().getId());
             ps.setInt(2, ticket.getPosRow());
             ps.setInt(3, ticket.getCell());
             ps.setInt(4, ticket.getUser().getId());
@@ -225,7 +226,7 @@ public class PostgresTicketRepository implements TicketRepository {
      */
     private static Ticket getTicketFromResultSet(ResultSet it) throws SQLException {
         return new Ticket(it.getInt("id"),
-                new Session(it.getInt("session_id"),
+                new Show(it.getInt("show_id"),
                         it.getString("name"),
                         it.getString("description"),
                         it.getString("posterName")

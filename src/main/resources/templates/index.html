@@ -55,18 +55,18 @@
         </div>
         <div class="card-body">
             <div class="col-12">
-                <div class="row mb-3" th:each="sess: ${sessions}">
+                <div class="row mb-3" th:each="show: ${shows}">
                     <div class="col-3 mb-3"><img class="img-thumbnail" th:if="*{filename} != ''"
-                                                 th:src="@{/img/{filename}(filename = ${sess.posterName})}"></div>
+                                                 th:src="@{/img/{filename}(filename = ${show.posterName})}"></div>
                     <div class="col-3">
-                        <div class="mb-3 row h5 font-weight-bold" th:text="${sess.name}"></div>
+                        <div class="mb-3 row h5 font-weight-bold" th:text="${show.name}"></div>
                         <div class="row mt-20">
                             <!--                    <form th:action="@{/cinemaHall}">-->
                             <!--                        <input type="submit" class="btn btn-primary" value="Купить билет"/>-->
                             <!--                    </form>-->
 
 
-                            <a th:href="@{/sessionHall(sessionId=${sess.id})}">
+                            <a th:href="@{/showRow(showId=${show.id})}">
                                 <i class="fa fa-edit" style="font-size:15px">Купить билет</i>
                             </a>
 
@@ -75,7 +75,7 @@
 
                         </div>
                     </div>
-                    <div class="col-6 text-justify" th:text="${sess.description}"></div>
+                    <div class="col-6 text-justify" th:text="${show.description}"></div>
                 </div>
             </div>
         </div>

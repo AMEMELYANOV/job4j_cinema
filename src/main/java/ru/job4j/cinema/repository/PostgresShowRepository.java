@@ -2,7 +2,7 @@ package ru.job4j.cinema.repository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import ru.job4j.cinema.model.Session;
+import ru.job4j.cinema.model.Show;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -15,16 +15,16 @@ import java.util.Optional;
 
 /**
  * Реализация хранилища сеансов
- * @see ru.job4j.cinema.model.Session
+ * @see ru.job4j.cinema.repository.ShowRepository
  * @author Alexander Emelyanov
  * @version 1.0
  */
 @Slf4j
 @Repository
-public class PostgresSessionRepository implements SessionRepository {
+public class PostgresShowRepository implements ShowRepository {
 
     /**
-     * SQL запрос по выбору всех сеансов из таблицы sessions
+     * SQL запрос по выбору всех сеансов из таблицы seshows
      */
     private static final String FIND_ALL_SELECT = """
             SELECT
@@ -32,36 +32,36 @@ public class PostgresSessionRepository implements SessionRepository {
                 name,
                 description,
                 posterName
-            FROM sessions
+            FROM shows
             """;
 
     /**
-     * SQL запрос по выбору всех сеансов из таблицы sessions с фильтром по id
+     * SQL запрос по выбору всех сеансов из таблицы shows с фильтром по id
      */
     private static final String FIND_BY_ID_SELECT = FIND_ALL_SELECT + """
             WHERE id = ?
             """;
 
     /**
-     * SQL запрос по добавлению строк в таблицу sessions
+     * SQL запрос по добавлению строк в таблицу shows
      */
     private static final String INSERT_INTO = """
-            INSERT INTO sessions(name, description, posterName) VALUES (?, ?, ?)
+            INSERT INTO shows(name, description, posterName) VALUES (?, ?, ?)
             """;
 
     /**
-     * SQL запрос по обновлению данных сеанса в таблице sessions
+     * SQL запрос по обновлению данных сеанса в таблице shows
      */
     private static final String UPDATE = """
-            UPDATE sessions SET name = ?, description = ?, posterName = ?
+            UPDATE shows SET name = ?, description = ?, posterName = ?
             WHERE id = ?
             """;
 
     /**
-     * SQL запрос по удалению сеансов из таблицы sessions с фильтром по id
+     * SQL запрос по удалению сеансов из таблицы shows с фильтром по id
      */
     private static final String DELETE = """
-            DELETE FROM sessions WHERE id = ?
+            DELETE FROM shows WHERE id = ?
             """;
 
     /**
@@ -74,7 +74,7 @@ public class PostgresSessionRepository implements SessionRepository {
      *
      * @param dataSource объект для выполнения подключения к базе данных приложения
      */
-    public PostgresSessionRepository(DataSource dataSource) {
+    public PostgresShowRepository(DataSource dataSource) {
         this.pool = dataSource;
     }
 
@@ -84,20 +84,20 @@ public class PostgresSessionRepository implements SessionRepository {
      * @return список всех сеансов
      */
     @Override
-    public List<Session> findAll() {
-        List<Session> sessions = new ArrayList<>();
+    public List<Show> findAll() {
+        List<Show> shows = new ArrayList<>();
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(FIND_ALL_SELECT)
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    sessions.add(getUserFromResultSet(it));
+                    shows.add(getUserFromResultSet(it));
                 }
             }
         } catch (Exception e) {
-            log.info("Исключение в методе findAll() класса PostgresSessionRepository ", e);
+            log.info("Исключение в методе findAll() класса PostgresShowRepository ", e);
         }
-        return sessions;
+        return shows;
     }
 
     /**
@@ -105,10 +105,10 @@ public class PostgresSessionRepository implements SessionRepository {
      * Optional с объектом сеанса. Иначе возвращает Optional.empty().
      *
      * @param id идентификатор сеанса
-     * @return Optional.of(session) при успешном нахождении, иначе Optional.empty()
+     * @return Optional.of(show) при успешном нахождении, иначе Optional.empty()
      */
     @Override
-    public Optional<Session> findById(int id) {
+    public Optional<Show> findById(int id) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(FIND_BY_ID_SELECT)
         ) {
@@ -119,7 +119,7 @@ public class PostgresSessionRepository implements SessionRepository {
                 }
             }
         } catch (Exception e) {
-            log.info("Исключение в методе findById() класса PostgresSessionRepository ", e);
+            log.info("Исключение в методе findById() класса PostgresShowRepository ", e);
         }
         return Optional.empty();
     }
@@ -128,27 +128,27 @@ public class PostgresSessionRepository implements SessionRepository {
      * Выполняет сохранение сеанса. При успешном сохранении возвращает Optional с
      * объектом сеанса, у которого проинициализировано id. Иначе возвращает Optional.empty()
      *
-     * @param session сохраняемый сеанс
-     * @return Optional.of(session) при успешном сохранении, иначе Optional.empty()
+     * @param show сохраняемый сеанс
+     * @return Optional.of(shows) при успешном сохранении, иначе Optional.empty()
      */
     @Override
-    public Optional<Session> save(Session session) {
+    public Optional<Show> save(Show show) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(INSERT_INTO,
                      PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
-            ps.setString(1, session.getName());
-            ps.setString(2, session.getDescription());
-            ps.setString(3, session.getPosterName());
+            ps.setString(1, show.getName());
+            ps.setString(2, show.getDescription());
+            ps.setString(3, show.getPosterName());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
-                    session.setId(id.getInt(1));
-                    return Optional.of(session);
+                    show.setId(id.getInt(1));
+                    return Optional.of(show);
                 }
             }
         } catch (Exception e) {
-            log.info("Исключение в методе save() класса PostgresSessionRepository ", e);
+            log.info("Исключение в методе save() класса PostgresShowRepository ", e);
         }
         return Optional.empty();
     }
@@ -156,20 +156,20 @@ public class PostgresSessionRepository implements SessionRepository {
     /**
      * Выполняет обновление объекта сеанс.
      *
-     * @param session объект сеанс
+     * @param show объект сеанс
      */
     @Override
-    public void update(Session session) {
+    public void update(Show show) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(UPDATE)
         ) {
-            ps.setString(1, session.getName());
-            ps.setString(2, session.getDescription());
-            ps.setString(3, session.getPosterName());
-            ps.setInt(4, session.getId());
+            ps.setString(1, show.getName());
+            ps.setString(2, show.getDescription());
+            ps.setString(3, show.getPosterName());
+            ps.setInt(4, show.getId());
             ps.execute();
         } catch (Exception e) {
-            log.info("Исключение в методе update() класса PostgresSessionRepository ", e);
+            log.info("Исключение в методе update() класса PostgresShowRepository ", e);
         }
 
     }
@@ -192,20 +192,20 @@ public class PostgresSessionRepository implements SessionRepository {
                 return true;
             }
         } catch (Exception e) {
-            log.info("Исключение в методе deleteById() класса PostgresSessionRepository ", e);
+            log.info("Исключение в методе deleteById() класса Show ", e);
         }
         return false;
     }
 
     /**
      * Вспомогательный метод выполняет создание
-     * объекта Session из объекта ResultSet.
+     * объекта Show из объекта ResultSet.
      *
      * @param it ResultSet SQL запроса к базе данных
-     * @return объект Session
+     * @return объект Show
      */
-    private static Session getUserFromResultSet(ResultSet it) throws SQLException {
-        return new Session(it.getInt("id"), it.getString("name"),
+    private static Show getUserFromResultSet(ResultSet it) throws SQLException {
+        return new Show(it.getInt("id"), it.getString("name"),
                 it.getString("description"), it.getString("posterName"));
     }
 }

@@ -14,7 +14,7 @@ import lombok.*;
 @Setter
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Session {
+public class Show {
     /**
      * Идентификатор сеанса
      */

@@ -4,7 +4,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import ru.job4j.cinema.config.DataSourceConfig;
-import ru.job4j.cinema.model.Session;
+import ru.job4j.cinema.model.Show;
 import ru.job4j.cinema.model.Ticket;
 import ru.job4j.cinema.model.User;
 
@@ -27,10 +27,10 @@ class PostgresTicketRepositoryTest {
             """;
 
     /**
-     * SQL запрос по очистке от данных таблицы sessions
+     * SQL запрос по очистке от данных таблицы shows
      */
-    private static final String CLEAR_TABLE_SESSIONS = """
-            DELETE FROM sessions;
+    private static final String CLEAR_TABLE_SHOWS = """
+            DELETE FROM shows;
             """;
 
     /**
@@ -41,7 +41,7 @@ class PostgresTicketRepositoryTest {
             """;
 
     /**
-     * Очистка таблиц: sessions, users, tickets, выполняется после каждого теста.
+     * Очистка таблиц: shows, users, tickets, выполняется после каждого теста.
      *
      * @throws SQLException если происходит ошибка доступа к базе данных
      */
@@ -50,7 +50,7 @@ class PostgresTicketRepositoryTest {
         try (BasicDataSource pool = new DataSourceConfig().loadPool();
              Connection connection = pool.getConnection();
              PreparedStatement statement1 = connection.prepareStatement(CLEAR_TABLE_TICKETS);
-             PreparedStatement statement2 = connection.prepareStatement(CLEAR_TABLE_SESSIONS);
+             PreparedStatement statement2 = connection.prepareStatement(CLEAR_TABLE_SHOWS);
              PreparedStatement statement3 = connection.prepareStatement(CLEAR_TABLE_USERS)
         ) {
             statement1.execute();
@@ -61,7 +61,7 @@ class PostgresTicketRepositoryTest {
 
     /**
      * Создается объект ticket и сохраняется в базе данных.
-     * По полю id объект ticket находится в базе данных, сохраняется в объект sessionFromDB
+     * По полю id объект ticket находится в базе данных, сохраняется в объект showFromDB
      * при помощи метода {@link PostgresTicketRepository#findById(int)}
      * и проверяется его эквивалентность объекту ticket по полю name.
      */
@@ -69,7 +69,7 @@ class PostgresTicketRepositoryTest {
     void whenSaveTicketThenGetTheSameFromDatabase() {
         PostgresTicketRepository ticketRepository = new PostgresTicketRepository(
                 new DataSourceConfig().loadPool());
-        PostgresSessionRepository sessionRepository = new PostgresSessionRepository(
+        PostgresShowRepository showRepository = new PostgresShowRepository(
                 new DataSourceConfig().loadPool());
         PostgresUserRepository userRepository = new PostgresUserRepository(
                 new DataSourceConfig().loadPool());
@@ -79,15 +79,15 @@ class PostgresTicketRepositoryTest {
                 .phone("phone")
                 .password("pass")
                 .build();
-        Session session = Session.builder()
+        Show show = Show.builder()
                 .name("name")
                 .description("description")
                 .build();
-        sessionRepository.save(session);
+        showRepository.save(show);
         userRepository.save(user);
 
         Ticket ticket = Ticket.builder()
-                .session(session)
+                .show(show)
                 .posRow(1)
                 .cell(1)
                 .user(user)
@@ -97,8 +97,8 @@ class PostgresTicketRepositoryTest {
 
         assertThat(ticketRepository.findById(ticket.getId()).get()).isNotNull()
                 .satisfies(oldTicket -> {
-                    assertThat(oldTicket.getSession().getId())
-                            .isEqualTo(ticketFromDB.getSession().getId());
+                    assertThat(oldTicket.getShow().getId())
+                            .isEqualTo(ticketFromDB.getShow().getId());
                     assertThat(oldTicket.getPosRow()).isEqualTo(ticketFromDB.getPosRow());
                     assertThat(oldTicket.getCell()).isEqualTo(ticketFromDB.getCell());
                 });
@@ -116,7 +116,7 @@ class PostgresTicketRepositoryTest {
     public void whenUpdateTicketThenGetTheSameFromDatabase() {
         PostgresTicketRepository ticketRepository = new PostgresTicketRepository(
                 new DataSourceConfig().loadPool());
-        PostgresSessionRepository sessionRepository = new PostgresSessionRepository(
+        PostgresShowRepository showRepository = new PostgresShowRepository(
                 new DataSourceConfig().loadPool());
         PostgresUserRepository userRepository = new PostgresUserRepository(
                 new DataSourceConfig().loadPool());
@@ -126,15 +126,16 @@ class PostgresTicketRepositoryTest {
                 .phone("phone")
                 .password("pass")
                 .build();
-        Session session = Session.builder()
+        Show show = Show.builder()
                 .name("name")
                 .description("description")
+                .posterName("poster.jpg")
                 .build();
-        sessionRepository.save(session);
+        showRepository.save(show);
         userRepository.save(user);
 
         Ticket ticket = Ticket.builder()
-                .session(session)
+                .show(show)
                 .posRow(1)
                 .cell(1)
                 .user(user)
@@ -157,7 +158,7 @@ class PostgresTicketRepositoryTest {
     public void whenFindTicketByIdThenGetTicketFromDatabase() {
         PostgresTicketRepository ticketRepository = new PostgresTicketRepository(
                 new DataSourceConfig().loadPool());
-        PostgresSessionRepository sessionRepository = new PostgresSessionRepository(
+        PostgresShowRepository showRepository = new PostgresShowRepository(
                 new DataSourceConfig().loadPool());
         PostgresUserRepository userRepository = new PostgresUserRepository(
                 new DataSourceConfig().loadPool());
@@ -173,27 +174,29 @@ class PostgresTicketRepositoryTest {
                 .phone("phone2")
                 .password("pass2")
                 .build();
-        Session session1 = Session.builder()
+        Show show1 = Show.builder()
                 .name("name1")
                 .description("description1")
+                .posterName("poster1.jpg")
                 .build();
-        Session session2 = Session.builder()
+        Show show2 = Show.builder()
                 .name("name2")
                 .description("description2")
+                .posterName("poster2.jpg")
                 .build();
-        sessionRepository.save(session1);
-        sessionRepository.save(session2);
+        showRepository.save(show1);
+        showRepository.save(show2);
         userRepository.save(user1);
         userRepository.save(user2);
 
         Ticket ticket1 = Ticket.builder()
-                .session(session1)
+                .show(show1)
                 .posRow(1)
                 .cell(1)
                 .user(user1)
                 .build();
         Ticket ticket2 = Ticket.builder()
-                .session(session2)
+                .show(show2)
                 .posRow(2)
                 .cell(2)
                 .user(user2)
@@ -203,8 +206,8 @@ class PostgresTicketRepositoryTest {
 
         assertThat(ticketRepository.findById(ticket1.getId()).get()).isNotNull()
                 .satisfies(ticket -> {
-                    assertThat(ticket.getSession().getId())
-                            .isEqualTo(ticket1.getSession().getId());
+                    assertThat(ticket.getShow().getId())
+                            .isEqualTo(ticket1.getShow().getId());
                     assertThat(ticket.getPosRow()).isEqualTo(ticket1.getPosRow());
                     assertThat(ticket.getCell()).isEqualTo(ticket1.getCell());
                 });
@@ -220,7 +223,7 @@ class PostgresTicketRepositoryTest {
     public void whenFindTicketByIdThenDoNotGetTicketFromDatabase() {
         PostgresTicketRepository ticketRepository = new PostgresTicketRepository(
                 new DataSourceConfig().loadPool());
-        PostgresSessionRepository sessionRepository = new PostgresSessionRepository(
+        PostgresShowRepository showRepository = new PostgresShowRepository(
                 new DataSourceConfig().loadPool());
         PostgresUserRepository userRepository = new PostgresUserRepository(
                 new DataSourceConfig().loadPool());
@@ -230,15 +233,15 @@ class PostgresTicketRepositoryTest {
                 .phone("phone")
                 .password("pass")
                 .build();
-        Session session = Session.builder()
+        Show show = Show.builder()
                 .name("name")
                 .description("description")
                 .build();
-        sessionRepository.save(session);
+        showRepository.save(show);
         userRepository.save(user);
 
         Ticket ticket = Ticket.builder()
-                .session(session)
+                .show(show)
                 .posRow(1)
                 .cell(1)
                 .user(user)
@@ -260,7 +263,7 @@ class PostgresTicketRepositoryTest {
     public void whenDeleteTicketByIdThenDoNotGetTicketFromDatabase() {
         PostgresTicketRepository ticketRepository = new PostgresTicketRepository(
                 new DataSourceConfig().loadPool());
-        PostgresSessionRepository sessionRepository = new PostgresSessionRepository(
+        PostgresShowRepository showRepository = new PostgresShowRepository(
                 new DataSourceConfig().loadPool());
         PostgresUserRepository userRepository = new PostgresUserRepository(
                 new DataSourceConfig().loadPool());
@@ -270,15 +273,15 @@ class PostgresTicketRepositoryTest {
                 .phone("phone")
                 .password("pass")
                 .build();
-        Session session = Session.builder()
+        Show show = Show.builder()
                 .name("name")
                 .description("description")
                 .build();
-        sessionRepository.save(session);
+        showRepository.save(show);
         userRepository.save(user);
 
         Ticket ticket = Ticket.builder()
-                .session(session)
+                .show(show)
                 .posRow(1)
                 .cell(1)
                 .user(user)
@@ -301,7 +304,7 @@ class PostgresTicketRepositoryTest {
     public void whenFindAllTicketsThenGetListOfAllTickets() {
         PostgresTicketRepository ticketRepository = new PostgresTicketRepository(
                 new DataSourceConfig().loadPool());
-        PostgresSessionRepository sessionRepository = new PostgresSessionRepository(
+        PostgresShowRepository showRepository = new PostgresShowRepository(
                 new DataSourceConfig().loadPool());
         PostgresUserRepository userRepository = new PostgresUserRepository(
                 new DataSourceConfig().loadPool());
@@ -317,27 +320,27 @@ class PostgresTicketRepositoryTest {
                 .phone("phone2")
                 .password("pass2")
                 .build();
-        Session session1 = Session.builder()
+        Show show1 = Show.builder()
                 .name("name1")
                 .description("description1")
                 .build();
-        Session session2 = Session.builder()
+        Show show2 = Show.builder()
                 .name("name2")
                 .description("description2")
                 .build();
-        sessionRepository.save(session1);
-        sessionRepository.save(session2);
+        showRepository.save(show1);
+        showRepository.save(show2);
         userRepository.save(user1);
         userRepository.save(user2);
 
         Ticket ticket1 = Ticket.builder()
-                .session(session1)
+                .show(show1)
                 .posRow(1)
                 .cell(1)
                 .user(user1)
                 .build();
         Ticket ticket2 = Ticket.builder()
-                .session(session2)
+                .show(show2)
                 .posRow(2)
                 .cell(2)
                 .user(user2)

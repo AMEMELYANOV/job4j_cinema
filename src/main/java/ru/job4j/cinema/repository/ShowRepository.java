@@ -1,49 +1,49 @@
-package ru.job4j.cinema.service;
+package ru.job4j.cinema.repository;
 
-import ru.job4j.cinema.model.Session;
+import ru.job4j.cinema.model.Show;
 
 import java.util.List;
 import java.util.Optional;
 
 /**
- * Сервис сеансов, логика работы с сеансами
- * @see ru.job4j.cinema.model.Session
+ * Хранилище сеансов
+ * @see ru.job4j.cinema.model.Show
  * @author Alexander Emelyanov
  * @version 1.0
  */
-public interface SessionService {
+public interface ShowRepository {
 
     /**
      * Возвращает список всех сеансов
      *
      * @return список всех сеансов
      */
-    List<Session> findAll();
+    List<Show> findAll();
 
     /**
      * Выполняет поиск сеанса по идентификатору. При успешном нахождении возвращает
      * Optional с объектом сеанса. Иначе возвращает Optional.empty().
      *
      * @param id идентификатор сеанса
-     * @return Optional.of(session) при успешном нахождении, иначе Optional.empty()
+     * @return Optional.of(show) при успешном нахождении, иначе Optional.empty()
      */
-    Optional<Session> findById(int id);
+    Optional<Show> findById(int id);
 
     /**
      * Выполняет сохранение сеанса. При успешном сохранении возвращает Optional с
      * объектом сеанса, у которого проинициализировано id. Иначе возвращает Optional.empty()
      *
-     * @param session сохраняемый сеанс
-     * @return Optional.of(session) при успешном сохранении, иначе Optional.empty()
+     * @param show сохраняемый сеанс
+     * @return Optional.of(show) при успешном сохранении, иначе Optional.empty()
      */
-    Optional<Session> save(Session session);
+    Optional<Show> save(Show show);
 
     /**
      * Выполняет обновление объекта сеанс.
      *
-     * @param session объект сеанс
+     * @param show объект сеанс
      */
-    void update(Session session);
+    void update(Show show);
 
     /**
      * Выполняет удаление сеанса по идентификатору. При успешном
