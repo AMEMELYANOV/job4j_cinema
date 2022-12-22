@@ -23,5 +23,4 @@ public class IndexController {
         model.addAttribute("shows", showService.findAll());
         return "index";
     }
-
 }

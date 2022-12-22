@@ -39,13 +39,13 @@ public class TicketController {
 //        return "showRow";
 //    }
 //
-//    @PostMapping("/showCell")
-//    public String setShowRow(@RequestParam(value = "posRow", required = false) Integer posRow,
-//                        Model model, HttpServletRequest req) {
-//        HttpSession session = req.getSession();
-//        session.setAttribute("posRow", posRow);
-//        model.addAttribute("show", session.getAttribute("show"));
-//        model.addAttribute("cells", List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
-//        return "showCell";
-//    }
+    @PostMapping("/bookTicket")
+    public String bookTicket(@RequestParam(value = "cell") Integer posRow,
+                        Model model, HttpServletRequest req) {
+        HttpSession session = req.getSession();
+        session.setAttribute("posRow", posRow);
+        model.addAttribute("show", session.getAttribute("show"));
+        model.addAttribute("cells", List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+        return "bookTicket";
+    }
 }

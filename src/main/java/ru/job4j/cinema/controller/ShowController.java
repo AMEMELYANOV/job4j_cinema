@@ -40,7 +40,7 @@ public class ShowController {
     }
 
     @PostMapping("/showCell")
-    public String setShowRow(@RequestParam(value = "posRow", required = false) Integer posRow,
+    public String setShowRow(@RequestParam(value = "posRow") Integer posRow,
                         Model model, HttpServletRequest req) {
         HttpSession session = req.getSession();
         session.setAttribute("posRow", posRow);
