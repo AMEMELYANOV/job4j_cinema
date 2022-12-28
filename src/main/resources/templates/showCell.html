@@ -69,19 +69,28 @@
             <span>Выбор места:</span>
         </div>
         <div class="card-body justify-content-right ml-3">
-            <div class="row">
+            <div class="row" th:if="${cells.size() == 0}" th:text="'Свободные места отсутствуют'">
+
+            </div>
+            <div class="row mt-3" th:if="${cells.size() == 0}">
+                <form th:action="@{/cancelBuyTicket}" method="POST">
+                    <button type="submit" class="btn btn-secondary" style="width:200px">Вернуться к списку
+                    </button>
+                </form>
+            </div>
+            <div class="row" th:if="${cells.size() != 0}">
                 <form th:action="@{/bookTicket}" method="POST">
                     <div class="form-group">
-                        <label for="cell">Место</label>
+                        <label for="cell">Выберите место</label>
                         <select class="form-control" id="cell" name="cell">
-                            <option selected>Выберите место</option>
+                            <!--                            <option selected disabled="disabled">Выберите место</option>-->
                             <option th:each="cell : ${cells}" th:value="${cell}" th:text="${cell}+' место'"></option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Бронирование билета</button>
+                    <button type="submit" class="btn btn-secondary">Бронирование билета</button>
                 </form>
             </div>
-            <div class="row mt-5">
+            <div class="row mt-5" th:if="${cells.size() != 0}">
                 <span style="font-size:10px">Для выбора доступны только свободные места</span>
             </div>
         </div>

@@ -31,6 +31,7 @@ public class ShowController {
                 .orElseThrow(() -> new NoSuchElementException("Сеанс не найден")));
         model.addAttribute("user", UserUtil.getSessionUser(req));
 
+//        model.addAttribute("rows", List.of());
         model.addAttribute("rows", List.of(1, 2, 3, 4, 5, 6, 7));
 
         HttpSession session = req.getSession();
@@ -46,6 +47,7 @@ public class ShowController {
         session.setAttribute("posRow", posRow);
         model.addAttribute("show", session.getAttribute("show"));
         model.addAttribute("cells", List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+//        model.addAttribute("cells", List.of());
         return "showCell";
     }
 }
