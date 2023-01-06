@@ -3,7 +3,10 @@ package ru.job4j.cinema.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import ru.job4j.cinema.repository.TicketRepository;
 import ru.job4j.cinema.service.ShowService;
+import ru.job4j.cinema.service.TicketService;
+import ru.job4j.cinema.util.ShowUtil;
 import ru.job4j.cinema.util.UserUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,9 +15,14 @@ import javax.servlet.http.HttpServletRequest;
 public class IndexController {
 
     private final ShowService showService;
+    private final ShowUtil showUtil;
+    private final TicketService ticketService;
 
-    public IndexController(ShowService showService) {
+    public IndexController(ShowService showService, ShowUtil showUtil,
+                           TicketRepository ticketRepository,  TicketService ticketService) {
         this.showService = showService;
+        this.showUtil = showUtil;
+        this.ticketService = ticketService;
     }
 
     @GetMapping("/index")

@@ -27,7 +27,7 @@ public interface TicketService {
      * @param id идентификатор билета
      * @return Optional.of(ticket) при успешном нахождении, иначе Optional.empty()
      */
-    Optional<Ticket> findById(int id);
+    Ticket findById(int id);
 
     /**
      * Выполняет сохранение билета. При успешном сохранении возвращает Optional с
@@ -38,7 +38,7 @@ public interface TicketService {
      * @param ticket сохраняемый билет
      * @return Optional.of(ticket) при успешном сохранении, иначе Optional.empty()
      */
-    Optional<Ticket> save(Ticket ticket);
+    Ticket save(Ticket ticket);
 
     /**
      * Выполняет обновление билета.

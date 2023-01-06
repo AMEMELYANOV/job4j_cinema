@@ -55,4 +55,12 @@ public interface TicketRepository {
      * @return {@code true} при успешном удалении билета, иначе {@code false}
      */
     boolean deleteById(int id);
+
+    /**
+     * Возвращает список всех билетов по идентификатору сеанса
+     *
+     * @param id идентификатор сеанса
+     * @return список всех билетов
+     */
+    List<Ticket> findAllTicketsByShowId(int id);
 }

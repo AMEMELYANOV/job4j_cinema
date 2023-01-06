@@ -51,10 +51,17 @@ public class PostgresTicketRepository implements TicketRepository {
             """;
 
     /**
-     * SQL запрос по выбору всех билетов из таблицы tickets с фильтром по id
+     * SQL запрос по выбору всех билетов из таблицы tickets с фильтром по id билета
      */
-    private static final String FIND_BY_ID_SELECT = FIND_ALL_SELECT + """ 
+    private static final String FIND_BY_TICKET_ID_SELECT = FIND_ALL_SELECT + """ 
             WHERE t.id = ?
+            """;
+
+    /**
+     * SQL запрос по выбору всех билетов из таблицы tickets с фильтром по id сеанса
+     */
+    private static final String FIND_BY_SHOW_ID_SELECT = FIND_ALL_SELECT + """ 
+            WHERE t.show_id = ?
             """;
 
     /**
@@ -126,7 +133,7 @@ public class PostgresTicketRepository implements TicketRepository {
     @Override
     public Optional<Ticket> findById(int id) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement(FIND_BY_ID_SELECT)
+             PreparedStatement ps = cn.prepareStatement(FIND_BY_TICKET_ID_SELECT)
         ) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
@@ -215,6 +222,31 @@ public class PostgresTicketRepository implements TicketRepository {
             log.info("Исключение в методе deleteById() класса PostgresTicketRepository ", e);
         }
         return false;
+    }
+
+    /**
+     * Возвращает список всех билетов по идентификатору сеанса
+     *
+     * @param id идентификатор сеанса
+     * @return список всех билетов
+     */
+    @Override
+    public List<Ticket> findAllTicketsByShowId(int id) {
+        List<Ticket> tickets = new ArrayList<>();
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement(FIND_BY_SHOW_ID_SELECT)
+        ) {
+            ps.setInt(1, id);
+            try (ResultSet it = ps.executeQuery()) {
+                while (it.next()) {
+                    tickets.add(getTicketFromResultSet(it));
+                }
+            }
+        } catch (Exception e) {
+            log.info("Исключение в методе findAllTicketsByShowId() "
+                    + "класса PostgresTicketRepository ", e);
+        }
+        return tickets;
     }
 
     /**

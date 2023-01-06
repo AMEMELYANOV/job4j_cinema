@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.job4j.cinema.model.Show;
 import ru.job4j.cinema.model.Ticket;
+import ru.job4j.cinema.model.User;
 import ru.job4j.cinema.service.ImplShowService;
 import ru.job4j.cinema.service.ImplTicketService;
 
@@ -44,8 +45,13 @@ public class TicketController {
         int posRow = (int) session.getAttribute("posRow");
         int cell = (int) session.getAttribute("cell");
 
-        Optional<Ticket> ticket = ticketService.save(Ticket
+        User user = User.builder()
+                .id(1)
+                .build();
+
+        Ticket ticket = ticketService.save(Ticket
                 .builder()
+                .user(user)
                 .show(show)
                 .posRow(posRow)
                 .cell(cell)

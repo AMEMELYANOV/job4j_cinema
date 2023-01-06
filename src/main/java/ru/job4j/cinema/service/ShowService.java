@@ -3,6 +3,7 @@ package ru.job4j.cinema.service;
 import ru.job4j.cinema.model.Show;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /**
@@ -21,24 +22,25 @@ public interface ShowService {
     List<Show> findAll();
 
     /**
-     * Выполняет поиск сеанса по идентификатору. При успешном нахождении возвращает
-     * Optional с объектом сеанса. Иначе возвращает Optional.empty().
+     * Возвращает сеанс по идентификатору.
      *
      * @param id идентификатор сеанса
-     * @return Optional.of(show) при успешном нахождении, иначе Optional.empty()
+     * @return show при успешном нахождении
+     * @exception NoSuchElementException, если show отсутствует.
      */
-    Optional<Show> findById(int id);
+    Show findById(int id);
 
     /**
-     * Выполняет сохранение сеанса. При успешном сохранении возвращает Optional с
-     * объектом сеанса, у которого проинициализировано id. Иначе возвращает Optional.empty()
+     * Выполняет сохранение сеанса. При успешном сохранении возвращает объект сеанса,
+     * у которого проинициализировано id. Иначе возвращает Optional.empty()
      *
      * @param show сохраняемый сеанс
      * @return Optional.of(session) при успешном сохранении, иначе Optional.empty()
      */
-    Optional<Show> save(Show show);
+    Show save(Show show);
 
     /**
+     * ????
      * Выполняет обновление объекта сеанс.
      *
      * @param show объект сеанс
@@ -53,4 +55,21 @@ public interface ShowService {
      * @return {@code true} при успешном удалении сеанса, иначе {@code false}
      */
     boolean deleteById(int id);
+
+    /**
+     * Возвращает список рядов по идентификатору сеанса.
+     *
+     * @param showId идентификатор сеанса
+     * @return {@code List<Integer>} рядов в зале
+     */
+    List<Integer> getRows(int showId);
+
+    /**
+     * Возвращает список мест в ряде по идентификатору сеанса.
+     *
+     * @param showId идентификатор сеанса
+     * @param posRow номер ряда
+     * @return {@code List<Integer>} мест в ряде
+     */
+    List<Integer> getCells(int showId, int posRow);
 }
