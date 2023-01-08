@@ -8,7 +8,7 @@ import java.util.Optional;
 
 /**
  * Сервис сеансов, логика работы с сеансами
- * @see ru.job4j.cinema.model.Show
+ * @see Show
  * @author Alexander Emelyanov
  * @version 1.0
  */

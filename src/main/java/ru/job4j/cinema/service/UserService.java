@@ -8,7 +8,7 @@ import java.util.Optional;
 
 /**
  * Сервис пользователей, логика работы с пользователями
- * @see Show
+ * @see User
  * @author Alexander Emelyanov
  * @version 1.0
  */
@@ -31,27 +31,29 @@ public interface UserService {
     User findById(int id);
 
     /**
-     * Выполняет сохранение сеанса. При успешном сохранении возвращает Optional с
-     * объектом сеанса, у которого проинициализировано id. Иначе возвращает Optional.empty()
+     * Выполняет сохранение пользователя. При успешном сохранении возвращает Optional с
+     * объектом пользователя, у которого проинициализировано id. Иначе возвращает Optional.empty()
      *
-     * @param user сохраняемый сеанс
+     * @param user сохраняемый пользователь
      * @return Optional.of(user) при успешном сохранении, иначе Optional.empty()
      */
     User save(User user);
 
     /**
-     * Выполняет обновление объекта сеанс.
+     * Выполняет обновление объекта пользователь.
      *
-     * @param user объект сеанс
+     * @param user объект пользователя
      */
     void update(User user);
 
     /**
-     * Выполняет удаление сеанса по идентификатору. При успешном
+     * Выполняет удаление пользователя по идентификатору. При успешном
      * удалении возвращает true, при неудачном false.
      *
-     * @param id идентификатор сеанса
-     * @return {@code true} при успешном удалении сеанса, иначе {@code false}
+     * @param id идентификатор пользователя
+     * @return {@code true} при успешном удалении пользователя, иначе {@code false}
      */
     boolean deleteById(int id);
+
+    User findUserByEmail(String email);
 }

@@ -43,13 +43,11 @@ public class ShowController {
                         Model model, HttpServletRequest req) {
         Show showFromDB = showService.findById(showId);
         model.addAttribute("show", showFromDB);
-        model.addAttribute("user", UserUtil.getSessionUser(req));
         List<Integer> rows = showService.getRows(showId);
-        model.addAttribute("rows", List.of());
         model.addAttribute("rows", List.of(1, 2, 3, 4, 5, 6, 7));
-
         HttpSession session = req.getSession();
         session.setAttribute("show", showFromDB);
+        model.addAttribute("user", UserUtil.getSessionUser(req));
 
         return "showRow";
     }
@@ -62,7 +60,7 @@ public class ShowController {
         Show show = (Show) session.getAttribute("show");
         model.addAttribute("show", show);
         model.addAttribute("cells", showService.getCells(show.getId(), posRow));
-//        model.addAttribute("cells", List.of());
+        model.addAttribute("user", UserUtil.getSessionUser(req));
         return "showCell";
     }
 }

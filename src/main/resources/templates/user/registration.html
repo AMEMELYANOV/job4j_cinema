@@ -1,0 +1,103 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <title>Страница регистрации</title>
+</head>
+<body>
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand">Кинотеатр</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li th:if="${user.email} == 'Guest'" class="nav-item">
+                    <a class="nav-item nav-link" th:href="@{/index}">Список фильмов</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li th:if="${user.email} == null" class="nav-item">
+                    <a class="nav-link" th:href="@{/login}">Войти</a>
+                </li>
+                <li th:if="${user.email} == null" class="nav-item">
+                    <a class="nav-link" th:href="@{/registration}">Регистрация</a>
+                </li>
+                <li th:if="${user.email} != null" class="nav-item">
+                    <a class="nav-link" th:text="'Вы вошли как : ' + ${user.username}"></a>
+                </li>
+                <li th:if="${user.email} != null" class="nav-item">
+                    <a class="nav-link" th:href="@{/logout}">Выйти</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<div class="container  pt-3">
+    <div class="row ml-4">
+        <div class="card" style="width: 500px">
+            <div class="card-header">
+                Создать новый профиль
+            </div>
+            <div class="card-body">
+                <div style="color:#ff0000;" th:if="${param.password}">
+                    <div th:text="${errorMessage}"></div>
+                </div>
+                <div style="color:#ff0000;" th:if="${param.account}">
+                    <div th:text="${errorMessage}"></div>
+                </div>
+                <form th:action="@{/registration}" method="POST" th:object="${user}">
+                    <div class="form-group">
+                        <label>Ваше имя</label>
+                        <input type="text" class="form-control" name="username" th:field="*{username}">
+                        <span style="color:#ff0000;"
+                              th:if="${#fields.hasErrors('username')}"
+                              th:errors="*{username}">UserName Error</span>
+                    </div>
+                    <div class="form-group">
+                        <label>Почта (аккаунт)</label>
+                        <input type="email" class="form-control" name="email" th:field="*{email}">
+                        <span style="color:#ff0000;"
+                              th:if="${#fields.hasErrors('email')}"
+                              th:errors="*{email}">Email Error</span>
+                    </div>
+                    <div class="form-group">
+                        <label>Пароль</label>
+                        <input type="password" class="form-control" name="password" th:field="*{password}">
+                        <span style="color:#ff0000;"
+                              th:if="${#fields.hasErrors('password')}"
+                              th:errors="*{password}">Password Error</span>
+                    </div>
+                    <div class="form-group">
+                        <label>Повторите пароль</label>
+                        <input type="password" class="form-control" name="repassword">
+                    </div>
+                    <div class="form-group">
+                        <label>Телефонный номер</label>
+                        <input type="text" class="form-control" name="phone"  th:field="*{phone}">
+                        <span style="color:#ff0000;"
+                              th:if="${#fields.hasErrors('phone')}"
+                              th:errors="*{phone}">Phone Error</span>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Продолжить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

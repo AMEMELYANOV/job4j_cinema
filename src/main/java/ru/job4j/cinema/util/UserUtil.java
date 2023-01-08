@@ -14,7 +14,7 @@ public final class UserUtil {
         User user = (User) req.getSession().getAttribute("user");
         if (user == null) {
             user = new User();
-            user.setEmail("Гость");
+//            user.setEmail("Guest");
         }
         return user;
     }

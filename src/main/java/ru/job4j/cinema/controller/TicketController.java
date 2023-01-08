@@ -9,6 +9,7 @@ import ru.job4j.cinema.model.Ticket;
 import ru.job4j.cinema.model.User;
 import ru.job4j.cinema.service.ImplShowService;
 import ru.job4j.cinema.service.ImplTicketService;
+import ru.job4j.cinema.util.UserUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -30,6 +31,7 @@ public class TicketController {
         model.addAttribute("show", session.getAttribute("show"));
         model.addAttribute("posRow", session.getAttribute("posRow"));
         model.addAttribute("cell", session.getAttribute("cell"));
+        model.addAttribute("user", UserUtil.getSessionUser(req));
         return "bookTicket";
     }
 
@@ -60,6 +62,7 @@ public class TicketController {
         model.addAttribute("show", show);
         model.addAttribute("posRow", posRow);
         model.addAttribute("cell", cell);
+        model.addAttribute("user", UserUtil.getSessionUser(req));
         return "/successful";
     }
 }

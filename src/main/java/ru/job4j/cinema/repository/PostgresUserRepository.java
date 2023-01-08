@@ -44,6 +44,13 @@ public class PostgresUserRepository implements UserRepository {
             """;
 
     /**
+     * SQL запрос по выбору всех пользователей из таблицы users с фильтром по email
+     */
+    private static final String FIND_BY_EMAIL_SELECT = FIND_ALL_SELECT + """
+            WHERE email = ?
+            """;
+
+    /**
      * SQL запрос по добавлению строк в таблицу users
      */
     private static final String INSERT_INTO = """
@@ -115,6 +122,30 @@ public class PostgresUserRepository implements UserRepository {
              PreparedStatement ps = cn.prepareStatement(FIND_BY_ID_SELECT)
         ) {
             ps.setInt(1, id);
+            try (ResultSet it = ps.executeQuery()) {
+                if (it.next()) {
+                    return Optional.of(getUserFromResultSet(it));
+                }
+            }
+        } catch (Exception e) {
+            log.info("Исключение в методе findById() класса PostgresUserRepository ", e);
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Выполняет поиск пользователя по наименованию почтового адреса. При успешном нахождении
+     * возвращает Optional с объектом пользователя. Иначе возвращает Optional.empty().
+     *
+     * @param email идентификатор пользователя
+     * @return Optional.of(user) при успешном нахождении, иначе Optional.empty()
+     */
+    @Override
+    public Optional<User> findUserByEmail(String email) {
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement(FIND_BY_EMAIL_SELECT)
+        ) {
+            ps.setString(1, email);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
                     return Optional.of(getUserFromResultSet(it));

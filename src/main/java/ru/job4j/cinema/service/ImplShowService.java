@@ -98,7 +98,13 @@ public class ImplShowService implements ShowService {
         return freeTickets.get(posRow);
     }
 
-    private Map<Integer, List<Integer>> getFreeTicketMap(int id) {
+    /**
+     * Возвращает сгенерированное отображение свободных мест в сеансе по id.
+     *
+     * @param showId идентификатор сеанса
+     * @return {@code Map<Integer, List<Integer>>} ключ - номер ряда, список - номера мест в ряде
+     */
+    private Map<Integer, List<Integer>> getFreeTicketMap(int showId) {
         Map<Integer, List<Integer>> freeTickets = new HashMap<>();
         for (int i = 1; i <= rows; i++) {
             freeTickets.put(i, new ArrayList<>());
@@ -106,7 +112,7 @@ public class ImplShowService implements ShowService {
                 freeTickets.get(i).add(j);
             }
         }
-        List<Ticket> tickets = ticketRepository.findAllTicketsByShowId(id);
+        List<Ticket> tickets = ticketRepository.findAllTicketsByShowId(showId);
         for (Ticket ticket : tickets) {
             freeTickets.get(ticket.getPosRow()).remove(ticket.getCell() - 1);
         }

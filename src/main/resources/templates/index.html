@@ -22,30 +22,32 @@
 </head>
 <body>
 <div class="container">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Cinema</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
-                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand">Кинотеатр</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                    <div class="navbar-nav">
-                        <a class="nav-item nav-link active" th:href="@{/index}">Главная <span class="sr-only">(current)</span></a>
-        <!--                <a class="nav-item nav-link" th:href="@{/posts}">Вакансии</a>-->
-        <!--                <a class="nav-item nav-link" th:href="@{/formAddPost}">Добавить вакансию</a>-->
-        <!--                <a class="nav-item nav-link" th:href="@{/candidates}">Кандидаты</a>-->
-        <!--                <a class="nav-item nav-link" th:href="@{/formAddCandidate}">Добавить кандидата</a>-->
-        <!--                <a class="nav-item nav-link" th:href="@{/registrationPage}">Регистрация</a>-->
-        <!--                <a class="nav-item nav-link" th:if="${user.email == 'Гость'}" th:href="@{/loginPage}">-->
-        <!--                    <span th:text="${user.email}"></span>-->
-        <!--                    <span> | Войти</span>-->
-        <!--                </a>-->
-        <!--                <a class="nav-item nav-link" th:if="${user.email != 'Гость'}" th:href="@{/logout}">-->
-        <!--                    <span th:text="${user.email}"></span>-->
-        <!--                    <span> | Выйти</span>-->
-        <!--                </a>-->
-                    </div>
-                </div>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-item nav-link" th:href="@{/index}">Список фильмов</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li th:if="${user.email} == null" class="nav-item">
+                    <a class="nav-link" th:href="@{/login}">Войти</a>
+                </li>
+                <li th:if="${user.email} == null" class="nav-item">
+                    <a class="nav-link" th:href="@{/registration}">Регистрация</a>
+                </li>
+                <li th:if="${user.email} != null" class="nav-item">
+                    <a class="nav-link" th:text="'Вы вошли как : ' + ${user.username}"></a>
+                </li>
+                <li th:if="${user.email} != null" class="nav-item">
+                    <a class="nav-link" th:href="@{/logout}">Выйти</a>
+                </li>
+            </ul>
+        </div>
     </nav>
 </div>
 <div class="container mt-3">
@@ -61,9 +63,6 @@
                     <div class="col-3">
                         <div class="mb-3 row h5 font-weight-bold" th:text="${show.name}"></div>
                         <div class="row mt-20">
-<!--                            <a th:href="@{/showRow(showId=${show.id})}">-->
-<!--                                <i class="fa fa-edit" style="font-size:15px">Купить билет</i>-->
-<!--                            </a>-->
                             <div class="col-2">
                                 <form th:action="@{/showRow}" method="POST">
                                     <input type="hidden" name="showId" th:value="${show.id}"/>
