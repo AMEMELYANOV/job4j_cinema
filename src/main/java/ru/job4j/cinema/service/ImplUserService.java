@@ -17,51 +17,98 @@ import java.util.NoSuchElementException;
 @Service
 public class ImplUserService implements UserService {
 
+    /**
+     * Объект для доступа к методам слоя UserRepository
+     */
     private final UserRepository userRepository;
 
     /**
      * Конструктор класса.
      *
-     * @param userRepository   объект для доступа к методам слоя UserRepository
+     * @param userRepository объект для доступа к методам слоя UserRepository
      */
     public ImplUserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Возвращает список всех пользователей
+     *
+     * @return список всех пользователей
+     */
     @Override
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
     /**
-     * Выполняет поиск сеанса по идентификатору. При успешном нахождении возвращает
-     * Optional с объектом сеанса. Иначе возвращает Optional.empty().
+     * Выполняет поиск пользователя по идентификатору. При успешном нахождении возвращает
+     * пользователя, иначе выбрасывает исключение.
      *
-     * @param id идентификатор сеанса
-     * @return Optional.of(show) при успешном нахождении, иначе Optional.empty()
+     * @param id идентификатор пользователя
+     * @return пользователя при успешном нахождении
+     * @exception NoSuchElementException, если user не найден.
      */
     @Override
     public User findById(int id) {
-        return userRepository.findById(id).get();
+        return userRepository.findById(id).orElseThrow(
+                () -> new NoSuchElementException(
+                        String.format("Пользователь c id = %d не найден", id)));
     }
 
+    /**
+     * Выполняет сохранение пользователя. При успешном сохранении возвращает
+     * пользователя, иначе выбрасывается исключение.
+     *
+     * @param user сохраняемый пользователь
+     * @return пользователя при успешном нахождении
+     * @exception IllegalArgumentException, если сохранение пользователя не произошло.
+     */
     @Override
     public User save(User user) {
         return userRepository.save(user).orElseThrow(
-                () -> new NoSuchElementException("Пользователь не создан"));
+                () -> new IllegalArgumentException("Пользователь не сохранен"));
     }
 
+    /**
+     * Выполняет обновление пользователя.
+     *
+     * @param user обновляемый пользователь
+     */
     @Override
     public void update(User user) {
+        userRepository.update(user);
     }
 
+    /**
+     * Выполняет удаление пользователя по идентификатору. При успешном удалении
+     * пользователя возвращает true, иначе выбрасывается исключение.
+     *
+     * @param id идентификатор пользователя
+     * @return true при успешном удалении
+     * @exception NoSuchElementException, если user не найден.
+     */
     @Override
     public boolean deleteById(int id) {
-        return false;
+        boolean result = userRepository.deleteById(id);
+        if (!result) {
+            throw new NoSuchElementException(String.format("Пользователь c id = %d не найден", id));
+        }
+        return true;
     }
 
+    /**
+     * Выполняет поиск пользователя по почтовому адресу. При успешном нахождении возвращает
+     * пользователя, иначе выбрасывает исключение.
+     *
+     * @param email почтовый адрес пользователя
+     * @return пользователя при успешном нахождении
+     * @exception NoSuchElementException, если пользователь не найден.
+     */
     @Override
     public User findUserByEmail(String email) {
-        return userRepository.findUserByEmail(email).orElse(null);
+        return userRepository.findUserByEmail(email).orElseThrow(
+                () -> new NoSuchElementException(
+                        String.format("Пользователь с email = %s не найден", email)));
     }
 }

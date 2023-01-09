@@ -70,12 +70,12 @@ public class ImplShowService implements ShowService {
     /**
      * Возвращает список рядов по идентификатору сеанса.
      *
-     * @param showId идентификатор сеанса
+     * @param id идентификатор сеанса
      * @return {@code List<Integer>} рядов в зале
      */
     @Override
-    public List<Integer> getRows(int showId) {
-        Map<Integer, List<Integer>> freeTickets = getFreeTicketMap(showId);
+    public List<Integer> getRows(int id) {
+        Map<Integer, List<Integer>> freeTickets = getFreeTicketMap(id);
         List<Integer> rows = new ArrayList<>();
         for (Map.Entry<Integer, List<Integer>> entry : freeTickets.entrySet()) {
             if (entry.getValue().size() > 0) {

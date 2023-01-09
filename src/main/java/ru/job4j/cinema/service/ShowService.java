@@ -4,7 +4,6 @@ import ru.job4j.cinema.model.Show;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 /**
  * Сервис сеансов, логика работы с сеансами

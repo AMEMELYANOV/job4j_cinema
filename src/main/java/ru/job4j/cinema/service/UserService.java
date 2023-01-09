@@ -1,16 +1,15 @@
 package ru.job4j.cinema.service;
 
-import ru.job4j.cinema.model.Show;
 import ru.job4j.cinema.model.User;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 /**
  * Сервис пользователей, логика работы с пользователями
- * @see User
  * @author Alexander Emelyanov
  * @version 1.0
+ * @see User
  */
 public interface UserService {
 
@@ -23,37 +22,48 @@ public interface UserService {
 
     /**
      * Выполняет поиск пользователя по идентификатору. При успешном нахождении возвращает
-     * Optional с объектом пользователя. Иначе возвращает Optional.empty().
+     * пользователя, иначе выбрасывает исключение.
      *
      * @param id идентификатор пользователя
-     * @return Optional.of(user) при успешном нахождении, иначе Optional.empty()
+     * @return пользователя при успешном нахождении
+     * @exception NoSuchElementException, если user не найден.
      */
     User findById(int id);
 
     /**
-     * Выполняет сохранение пользователя. При успешном сохранении возвращает Optional с
-     * объектом пользователя, у которого проинициализировано id. Иначе возвращает Optional.empty()
+     * Выполняет сохранение пользователя. При успешном сохранении возвращает
+     * пользователя, иначе выбрасывается исключение.
      *
      * @param user сохраняемый пользователь
-     * @return Optional.of(user) при успешном сохранении, иначе Optional.empty()
+     * @return пользователя при успешном нахождении
+     * @exception IllegalArgumentException, если сохранение пользователя не произошло.
      */
     User save(User user);
 
     /**
-     * Выполняет обновление объекта пользователь.
+     * Выполняет обновление пользователя.
      *
-     * @param user объект пользователя
+     * @param user обновляемый пользователь
      */
     void update(User user);
 
     /**
-     * Выполняет удаление пользователя по идентификатору. При успешном
-     * удалении возвращает true, при неудачном false.
+     * Выполняет удаление пользователя по идентификатору. При успешном удалении
+     * пользователя возвращает true, иначе выбрасывается исключение.
      *
      * @param id идентификатор пользователя
-     * @return {@code true} при успешном удалении пользователя, иначе {@code false}
+     * @return true при успешном удалении
+     * @exception NoSuchElementException, если user не найден.
      */
     boolean deleteById(int id);
 
+    /**
+     * Выполняет поиск пользователя по почтовому адресу. При успешном нахождении возвращает
+     * пользователя, иначе выбрасывает исключение.
+     *
+     * @param email почтовый адрес пользователя
+     * @return пользователя при успешном нахождении
+     * @exception NoSuchElementException, если пользователь не найден.
+     */
     User findUserByEmail(String email);
 }
