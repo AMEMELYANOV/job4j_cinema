@@ -17,11 +17,6 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-item nav-link" th:href="@{/index}">Список фильмов</a>
-                </li>
-            </ul>
             <ul class="navbar-nav ml-auto">
                 <li th:if="${user.email} == null" class="nav-item">
                     <a class="nav-link" th:href="@{/login}">Войти</a>

@@ -7,13 +7,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.job4j.cinema.model.Show;
 import ru.job4j.cinema.model.Ticket;
 import ru.job4j.cinema.model.User;
-import ru.job4j.cinema.service.ImplShowService;
 import ru.job4j.cinema.service.ImplTicketService;
 import ru.job4j.cinema.util.UserUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Optional;
 
 @Controller
 public class TicketController {
@@ -23,7 +21,7 @@ public class TicketController {
         this.ticketService = ticketService;
     }
 
-    @PostMapping("/bookTicket")
+    @PostMapping("/buyTicket")
     public String bookTicket(@RequestParam(value = "cell") Integer cell,
                              Model model, HttpServletRequest req) {
         HttpSession session = req.getSession();
@@ -32,37 +30,26 @@ public class TicketController {
         model.addAttribute("posRow", session.getAttribute("posRow"));
         model.addAttribute("cell", session.getAttribute("cell"));
         model.addAttribute("user", UserUtil.getSessionUser(req));
-        return "bookTicket";
+        return "ticket/buyTicket";
     }
 
     @PostMapping("/cancelBuyTicket")
     public String cancelBuyTicket() {
-        return "redirect:/index";
+        return "redirect:/shows";
     }
 
     @PostMapping("/confirmBuyTicket")
     public String confirmBuyTicket(Model model, HttpServletRequest req) {
         HttpSession session = req.getSession();
-        Show show = (Show) session.getAttribute("show");
-        int posRow = (int) session.getAttribute("posRow");
-        int cell = (int) session.getAttribute("cell");
-
-        User user = User.builder()
-                .id(1)
-                .build();
-
         Ticket ticket = ticketService.save(Ticket
                 .builder()
-                .user(user)
-                .show(show)
-                .posRow(posRow)
-                .cell(cell)
+                .user((User) session.getAttribute("user"))
+                .show((Show) session.getAttribute("show"))
+                .posRow((int) session.getAttribute("posRow"))
+                .cell((int) session.getAttribute("cell"))
                 .build());
-
-        model.addAttribute("show", show);
-        model.addAttribute("posRow", posRow);
-        model.addAttribute("cell", cell);
-        model.addAttribute("user", UserUtil.getSessionUser(req));
-        return "/successful";
+        model.addAttribute("ticket", ticket);
+        model.addAttribute("user", session.getAttribute("user"));
+        return "ticket/successful";
     }
 }

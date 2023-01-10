@@ -34,55 +34,44 @@
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
-                <li th:if="${session.user.email} == null" class="nav-item">
+                <li th:if="${user.email} == null" class="nav-item">
                     <a class="nav-link" th:href="@{/login}">Войти</a>
                 </li>
-                <li th:if="${session.user.email} == null" class="nav-item">
+                <li th:if="${user.email} == null" class="nav-item">
                     <a class="nav-link" th:href="@{/registration}">Регистрация</a>
                 </li>
-                <li th:if="${session.user.email} != null" class="nav-item">
-                    <a class="nav-link" th:text="'Вы вошли как : ' + ${session.user.username}"></a>
+                <li th:if="${user.email} != null" class="nav-item">
+                    <a class="nav-link" th:text="'Вы вошли как : ' + ${user.username}"></a>
                 </li>
-                <li th:if="${session.user.email} != null" class="nav-item">
+                <li th:if="${user.email} != null" class="nav-item">
                     <a class="nav-link" th:href="@{/logout}">Выйти</a>
                 </li>
             </ul>
         </div>
     </nav>
 </div>
-<div class="container">
+<div class="container mt-3">
     <div class="card" style="width: 100%">
         <div class="card-header">
-            <span style="color:#ff0000;font-weight: bold;">Произошла ошибка (404 Not Found), отсутствие объекта</span>
+            Список фильмов
         </div>
         <div class="card-body">
-            <div class="row justify-content-center">
-                <div class="col-md-auto">
-                    <img class="img-thumbnail" src="/img/showHall.png">
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="container">
-    <div class="card-header">
-    </div>
-    <div class="card" style="width: 100%">
-        <div class="card-body justify-content-right ml-3">
-            <div class="col">
-                <div class="row"><span style="color:#ff0000;font-weight: bold;" th:text="${errorMessage}"></span></div>
-            </div>
-            <div class="row mt-3">
-                <div class="col-2">
-                    <form th:action="@{/showRow}" method="POST">
-                        <input type="hidden" name="showId" th:value="${session.show.id}"/>
-                        <button type="submit" class="btn btn-secondary" style="width:180px">К киносеансу</button>
-                    </form>
-                </div>
-                <div class="col-2 ml-3">
-                    <form th:action="@{/cancelBuyTicket}" method="POST">
-                        <button type="submit" class="btn btn-secondary" style="width:180px">К списку сеансов</button>
-                    </form>
+            <div class="col-12">
+                <div class="row mb-3" th:each="show: ${shows}">
+                    <div class="col-3 mb-3"><img class="img-thumbnail" th:if="*{filename} != ''"
+                                                 th:src="@{/img/{filename}(filename = ${show.posterName})}"></div>
+                    <div class="col-3">
+                        <div class="mb-3 row h5 font-weight-bold" th:text="${show.name}"></div>
+                        <div class="row mt-20">
+                            <div class="col-2">
+                                <form th:action="@{/showRow}" method="POST">
+                                    <input type="hidden" name="showId" th:value="${show.id}"/>
+                                    <button type="submit" class="btn btn-secondary">Купить</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 text-justify" th:text="${show.description}"></div>
                 </div>
             </div>
         </div>

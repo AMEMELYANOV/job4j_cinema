@@ -5,14 +5,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.handler.MappedInterceptor;
 import ru.job4j.cinema.model.Show;
 import ru.job4j.cinema.service.ImplShowService;
 import ru.job4j.cinema.util.UserUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.*;
+import java.util.List;
 
 @Controller
 public class ShowController {
@@ -22,21 +21,12 @@ public class ShowController {
         this.showService = showService;
     }
 
-//    @GetMapping("/showRow{showId}")
-//    public String getShowRow(@RequestParam(value = "showId") int showId,
-//                        Model model, HttpServletRequest req) {
-//        Show showFromDB = showService.findById(showId);
-//        model.addAttribute("show", showFromDB);
-//        model.addAttribute("user", UserUtil.getSessionUser(req));
-//
-////        model.addAttribute("rows", List.of());
-//        model.addAttribute("rows", List.of(1, 2, 3, 4, 5, 6, 7));
-//
-//        HttpSession session = req.getSession();
-//        session.setAttribute("show", showFromDB);
-//
-//        return "showRow";
-//    }
+    @GetMapping("/shows")
+    public String getShowRow(Model model, HttpServletRequest req) {
+        model.addAttribute("user", UserUtil.getSessionUser(req));
+        model.addAttribute("shows", showService.findAll());
+        return "show/shows";
+    }
 
     @PostMapping("/showRow")
     public String getPostShowRow(@RequestParam(value = "showId") int showId,
@@ -49,7 +39,7 @@ public class ShowController {
         session.setAttribute("show", showFromDB);
         model.addAttribute("user", UserUtil.getSessionUser(req));
 
-        return "showRow";
+        return "show/showRow";
     }
 
     @PostMapping("/showCell")
@@ -61,6 +51,6 @@ public class ShowController {
         model.addAttribute("show", show);
         model.addAttribute("cells", showService.getCells(show.getId(), posRow));
         model.addAttribute("user", UserUtil.getSessionUser(req));
-        return "showCell";
+        return "show/showCell";
     }
 }

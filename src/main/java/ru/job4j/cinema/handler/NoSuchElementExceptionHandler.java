@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
 
 @Slf4j
 @ControllerAdvice
-public class GlobalExceptionHandler {
+public class NoSuchElementExceptionHandler {
 
     @ExceptionHandler(value = {NoSuchElementException.class})
     public ModelAndView handleException(Exception e) {

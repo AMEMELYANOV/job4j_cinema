@@ -5,7 +5,6 @@ import ru.job4j.cinema.model.Ticket;
 import ru.job4j.cinema.repository.TicketRepository;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -29,7 +28,7 @@ public class ImplTicketService implements TicketService {
     @Override
     public Ticket save(Ticket ticket) {
         Optional<Ticket> optionalTicket = ticketRepository.save(ticket);
-        return optionalTicket.orElseThrow(() -> new NoSuchElementException("Билет уже продан"));
+        return optionalTicket.orElseThrow(() -> new IllegalArgumentException("Билет уже продан"));
     }
 
     @Override

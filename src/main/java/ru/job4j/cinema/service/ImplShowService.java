@@ -7,7 +7,10 @@ import ru.job4j.cinema.model.Ticket;
 import ru.job4j.cinema.repository.ShowRepository;
 import ru.job4j.cinema.repository.TicketRepository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Реализация сервиса по работе с сеансами

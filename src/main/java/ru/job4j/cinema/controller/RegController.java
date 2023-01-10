@@ -59,9 +59,4 @@ public class RegController {
 //        log.info("Method {} run", "regPage");
         return "user/registration";
     }
-
-//    @ModelAttribute
-//    public User user() {
-//        return new User();
-//    }
 }

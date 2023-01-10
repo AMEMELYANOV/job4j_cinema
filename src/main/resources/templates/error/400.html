@@ -29,21 +29,21 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
-                <li th:if="${user.email} == 'Guest'" class="nav-item">
-                    <a class="nav-item nav-link" th:href="@{/index}">Список фильмов</a>
+                <li class="nav-item">
+                    <a class="nav-item nav-link" th:href="@{/shows}">Список фильмов</a>
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
-                <li th:if="${user.email} == null" class="nav-item">
+                <li th:if="${session.user.email} == null" class="nav-item">
                     <a class="nav-link" th:href="@{/login}">Войти</a>
                 </li>
-                <li th:if="${user.email} == null" class="nav-item">
+                <li th:if="${session.user.email} == null" class="nav-item">
                     <a class="nav-link" th:href="@{/registration}">Регистрация</a>
                 </li>
-                <li th:if="${user.email} != null" class="nav-item">
-                    <a class="nav-link" th:text="'Вы вошли как : ' + ${user.username}"></a>
+                <li th:if="${session.user.email} != null" class="nav-item">
+                    <a class="nav-link" th:text="'Вы вошли как : ' + ${session.user.username}"></a>
                 </li>
-                <li th:if="${user.email} != null" class="nav-item">
+                <li th:if="${session.user.email} != null" class="nav-item">
                     <a class="nav-link" th:href="@{/logout}">Выйти</a>
                 </li>
             </ul>
@@ -53,7 +53,7 @@
 <div class="container">
     <div class="card" style="width: 100%">
         <div class="card-header">
-            <span>Проверка билета:</span>
+            <span style="color:#ff0000;font-weight: bold;">Произошла ошибка (400 Bad Request), некорректный запрос</span>
         </div>
         <div class="card-body">
             <div class="row justify-content-center">
@@ -70,24 +70,20 @@
     <div class="card" style="width: 100%">
         <div class="card-body justify-content-right ml-3">
             <div class="col">
-                <div class="row"><span th:text="'Киносеанс: '+${show.name}"></span></div>
-                <div class="row"><span th:text="'Ряд: '+${posRow}"></span></div>
-                <div class="row"><span th:text="'Место: '+${cell}"></span></div>
+                <div class="row"><span style="color:#ff0000;font-weight: bold;" th:text="${errorMessage}"></span></div>
             </div>
             <div class="row mt-3">
-                <div class="col-1">
-                    <form th:action="@{/confirmBuyTicket}" method="POST">
-                        <button type="submit" class="btn btn-secondary" style=" width:100px;">Купить</button>
+                <div class="col-2">
+                    <form th:action="@{/showRow}" method="POST">
+                        <input type="hidden" name="showId" th:value="${session.show.id}"/>
+                        <button type="submit" class="btn btn-secondary" style="width:180px">К киносеансу</button>
                     </form>
                 </div>
-                <div class="col-1 ml-5">
+                <div class="col-2 ml-3">
                     <form th:action="@{/cancelBuyTicket}" method="POST">
-                        <button type="submit" class="btn btn-secondary" style=" width:100px;">Отменить</button>
+                        <button type="submit" class="btn btn-secondary" style="width:180px">К списку сеансов</button>
                     </form>
                 </div>
-            </div>
-            <div class="row mt-5">
-                <span style="font-size:10px">При отмене покупки произойдет возврат к списку фильмов</span>
             </div>
         </div>
     </div>

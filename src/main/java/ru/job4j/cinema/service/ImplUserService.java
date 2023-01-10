@@ -111,4 +111,17 @@ public class ImplUserService implements UserService {
                 () -> new NoSuchElementException(
                         String.format("Пользователь с email = %s не найден", email)));
     }
+
+    /**
+     * Выполняет проверку пользователя в базе по почтовому адресу и паролю. При успешной
+     * проверке возвращает true, иначе false.
+     *
+     * @param user пользователя
+     * @return true при успешном при совпадении пароля и почтового адреса, иначе false
+     */
+    @Override
+    public boolean validateUserLogin(User user) {
+        User userFromDB = findUserByEmail(user.getEmail());
+        return userFromDB != null && userFromDB.getPassword().equals(user.getPassword());
+    }
 }

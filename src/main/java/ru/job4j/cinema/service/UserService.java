@@ -66,4 +66,13 @@ public interface UserService {
      * @exception NoSuchElementException, если пользователь не найден.
      */
     User findUserByEmail(String email);
+
+    /**
+     * Выполняет проверку пользователя в базе по почтовому адресу и паролю. При успешной
+     * проверке возвращает true, иначе false.
+     *
+     * @param user пользователя
+     * @return true при успешном при совпадении пароля и почтового адреса, иначе false
+     */
+    boolean validateUserLogin(User user);
 }
