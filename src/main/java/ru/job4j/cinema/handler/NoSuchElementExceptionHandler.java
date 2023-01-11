@@ -7,10 +7,24 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.NoSuchElementException;
 
+/**
+ * Глобальный обработчик исключений
+ * @see NoSuchElementException
+ * @author Alexander Emelyanov
+ * @version 1.0
+ */
 @Slf4j
 @ControllerAdvice
 public class NoSuchElementExceptionHandler {
 
+    /**
+     * Выполняет глобальный (уровня приложения) перехват исключений
+     * NoSuchElementException, в случае перехвата, направляет информацию
+     * об исключении на соответствующую веб страницу.
+     *
+     * @param e перехваченное исключение
+     * @return модель для передачи данных об исключении на веб страницу
+     */
     @ExceptionHandler(value = {NoSuchElementException.class})
     public ModelAndView handleException(Exception e) {
         log.error(e.getMessage());

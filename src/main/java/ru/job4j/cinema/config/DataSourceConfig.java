@@ -21,7 +21,7 @@ public class DataSourceConfig {
      * подключения приложения к базе данных приложения,
      * параметры считываются из файла /resources/db.properties
      *
-     * @return объект Properties
+     * @return Properties - объект содержащий конфигурацию подключения к базе данных
      */
     private Properties loadDbProperties() {
         Properties cfg = new Properties();
@@ -44,10 +44,10 @@ public class DataSourceConfig {
     }
 
     /**
-     * Выполняется создание Bean (BasicDataSource)
+     * Выполняется создание Bean BasicDataSource
      * содержащего pool соединений для подключения к СУБД
      *
-     * @return объект BasicDataSource
+     * @return BasicDataSource - объект для организации работы с базой данных
      */
     @Bean
     public BasicDataSource loadPool() {

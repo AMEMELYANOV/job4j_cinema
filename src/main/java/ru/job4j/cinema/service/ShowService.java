@@ -7,7 +7,7 @@ import java.util.NoSuchElementException;
 
 /**
  * Сервис сеансов, логика работы с сеансами
- * @see Show
+ * @see ru.job4j.cinema.model.Show
  * @author Alexander Emelyanov
  * @version 1.0
  */
@@ -32,10 +32,10 @@ public interface ShowService {
 
     /**
      * Выполняет сохранение сеанса. При успешном сохранении возвращает
-     * сеанс, иначе выбрасывается исключение.
+     * сохраненный сеанс, иначе выбрасывается исключение.
      *
      * @param show сохраняемый сеанс
-     * @return сеанс при успешном нахождении
+     * @return сеанс при успешном сохранении
      * @exception IllegalArgumentException, если сохранение сеанса не произошло
      */
     Show save(Show show);

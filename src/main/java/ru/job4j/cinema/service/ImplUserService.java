@@ -17,14 +17,15 @@ import java.util.NoSuchElementException;
 public class ImplUserService implements UserService {
 
     /**
-     * Объект для доступа к методам слоя UserRepository
+     * Объект для доступа к методам UserRepository
      */
     private final UserRepository userRepository;
 
     /**
      * Конструктор класса.
      *
-     * @param userRepository объект для доступа к методам слоя UserRepository
+     * @param userRepository объект для доступа к методам UserRepository
+     * @see ru.job4j.cinema.repository.UserRepository
      */
     public ImplUserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -57,10 +58,10 @@ public class ImplUserService implements UserService {
 
     /**
      * Выполняет сохранение пользователя. При успешном сохранении возвращает
-     * пользователя, иначе выбрасывается исключение.
+     * сохраненного пользователя, иначе выбрасывается исключение.
      *
      * @param user сохраняемый пользователь
-     * @return пользователя при успешном нахождении
+     * @return пользователя при успешном сохранении
      * @exception IllegalArgumentException, если сохранение пользователя не произошло
      */
     @Override
@@ -89,8 +90,7 @@ public class ImplUserService implements UserService {
      */
     @Override
     public boolean deleteById(int id) {
-        boolean result = userRepository.deleteById(id);
-        if (!result) {
+        if (!userRepository.deleteById(id)) {
             throw new NoSuchElementException(
                     String.format("Пользователь c id = %d не найден", id));
         }

@@ -28,11 +28,12 @@ public class ImplShowService implements ShowService {
     @Value("${show.cells}")
     private int cells;
     /**
-     * Объект для доступа к методам слоя ShowRepository
+     * Объект для доступа к методам ShowRepository
      */
     private final ShowRepository showRepository;
     /**
-     * Объект для доступа к методам слоя TicketRepository
+     * Объект для доступа к методам TicketRepository
+     * @see ru.job4j.cinema.repository.TicketRepository
      */
     private final TicketRepository ticketRepository;
 
@@ -74,10 +75,10 @@ public class ImplShowService implements ShowService {
 
     /**
      * Выполняет сохранение сеанса. При успешном сохранении возвращает
-     * сеанс, иначе выбрасывается исключение.
+     * сохраненный сеанс, иначе выбрасывается исключение.
      *
      * @param show сохраняемый сеанс
-     * @return сеанс при успешном нахождении
+     * @return сеанс при успешном сохранении
      * @exception IllegalArgumentException, если сохранение сеанса не произошло
      */
     @Override
@@ -106,8 +107,7 @@ public class ImplShowService implements ShowService {
      */
     @Override
     public boolean deleteById(int id) {
-        boolean result = showRepository.deleteById(id);
-        if (!result) {
+        if (!showRepository.deleteById(id)) {
             throw new NoSuchElementException(
                     String.format("Сеанс c id = %d не найден", id));
         }

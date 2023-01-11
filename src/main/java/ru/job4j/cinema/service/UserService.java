@@ -7,7 +7,7 @@ import java.util.NoSuchElementException;
 
 /**
  * Сервис пользователей, логика работы с пользователями
- * @see User
+ * @see ru.job4j.cinema.model.User
  * @author Alexander Emelyanov
  * @version 1.0
  */
@@ -35,7 +35,7 @@ public interface UserService {
      * пользователя, иначе выбрасывается исключение.
      *
      * @param user сохраняемый пользователь
-     * @return пользователя при успешном нахождении
+     * @return пользователя при успешном сохранении
      * @exception IllegalArgumentException, если сохранение пользователя не произошло
      */
     User save(User user);
@@ -59,7 +59,7 @@ public interface UserService {
 
     /**
      * Выполняет поиск пользователя по почтовому адресу. При успешном нахождении возвращает
-     * пользователя, иначе выбрасывает исключение.
+     * сохраненного пользователя, иначе выбрасывает исключение.
      *
      * @param email почтовый адрес пользователя
      * @return пользователя при успешном нахождении
