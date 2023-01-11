@@ -9,7 +9,6 @@ import ru.job4j.cinema.service.UserService;
 import ru.job4j.cinema.util.UserUtil;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.NoSuchElementException;
 
@@ -58,7 +57,7 @@ public class LoginController {
     }
 
     @ExceptionHandler(value = {IllegalArgumentException.class, NoSuchElementException.class})
-    public String exceptionHandler(Exception e, HttpServletRequest request, HttpServletResponse response) {
+    public String exceptionHandler(Exception e) {
         log.error(e.getLocalizedMessage());
         return "redirect:/login?error=true";
     }

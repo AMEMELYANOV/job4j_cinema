@@ -34,7 +34,7 @@ public class ShowController {
         Show showFromDB = showService.findById(showId);
         model.addAttribute("show", showFromDB);
         List<Integer> rows = showService.getRows(showId);
-        model.addAttribute("rows", List.of(1, 2, 3, 4, 5, 6, 7));
+        model.addAttribute("rows", rows);
         HttpSession session = req.getSession();
         session.setAttribute("show", showFromDB);
         model.addAttribute("user", UserUtil.getSessionUser(req));

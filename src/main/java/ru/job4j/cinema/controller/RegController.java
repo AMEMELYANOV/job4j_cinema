@@ -29,17 +29,11 @@ public class RegController {
         if (errors.hasErrors()) {
             return "user/registration";
         }
-        User userFromDB = userService.findUserByEmail(user.getEmail());
-        if (userFromDB != null) {
-            return "redirect:/user/registration?account=true";
-        }
-        if (!user.getPassword().equals(repassword)) {
-            return "redirect:/user/registration?password=true";
-        }
+        userService.validateUserReg(user, repassword);
         userService.save(user);
 
 //        log.info("Method {} run", "regSave");
-        return "redirect:/user/login";
+        return "redirect:/login";
     }
 
     @GetMapping
@@ -52,11 +46,23 @@ public class RegController {
             errorMessage = "Пароли должны совпадать!";
         }
         if (account != null) {
-            errorMessage = "Аккаунт уже существует!";
+            errorMessage = "Пользователь с таким email или номером телефона уже зарегистрирован!";
         }
         model.addAttribute("errorMessage", errorMessage);
         model.addAttribute("user", UserUtil.getSessionUser(request));
 //        log.info("Method {} run", "regPage");
         return "user/registration";
+    }
+
+    @ExceptionHandler(value = {IllegalStateException.class})
+    public String illegalStateExceptionHandler(Exception e) {
+        log.error(e.getLocalizedMessage());
+        return "redirect:/registration?password=true";
+    }
+
+    @ExceptionHandler(value = {IllegalArgumentException.class})
+    public String illegalArgumentExceptionHandler(Exception e) {
+        log.error(e.getLocalizedMessage());
+        return "redirect:/registration?account=true";
     }
 }

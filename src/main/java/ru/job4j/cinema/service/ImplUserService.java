@@ -9,10 +9,9 @@ import java.util.NoSuchElementException;
 
 /**
  * Реализация сервиса по работе с пользователями
- *
+ * @see ru.job4j.cinema.model.User
  * @author Alexander Emelyanov
  * @version 1.0
- * @see ru.job4j.cinema.model.User
  */
 @Service
 public class ImplUserService implements UserService {
@@ -113,8 +112,9 @@ public class ImplUserService implements UserService {
     }
 
     /**
-     * Выполняет проверку пользователя в базе по почтовому адресу и паролю. При успешной
-     * проверке возвращает пользователя извлеченного из базы данных, иначе выбрасывает исключение.
+     * Выполняет сверку данных пользователя с входной формы с данными пользователя в базе по
+     * почтовому адресу и паролю. При успешной проверке возвращает пользователя извлеченного
+     * из базы данных, иначе выбрасывает исключение.
      * Для нахождения пользователя в базе данных используется метод
      * {@link ImplUserService#findUserByEmail(String)}.
      *
@@ -129,5 +129,29 @@ public class ImplUserService implements UserService {
             throw new IllegalArgumentException("Неправильно введен пароль");
         }
         return userFromDB;
+    }
+
+    /**
+     * Выполняет сверку данных пользователя с формы регистрации с данными пользователя в базе по
+     * почтовому адресу. Исключения выбрасываются при несовпадении паролей указанных при регистрации
+     * и при наличии в базе пользователя с таким же паролем и номером телефона.
+     * При успешной регистрации возвращает пользователя, созданного с данными формы регистрации
+     *
+     * @param user пользователя
+     * @return пользователя при успешном при совпадении пароля и почтового адреса
+     * @exception IllegalStateException, если пароли пользователя не совпали
+     * @exception IllegalArgumentException, если пользователь с таким же email или паролем сохранен в базе
+     */
+    @Override
+    public User validateUserReg(User user, String repassword) {
+        if (!user.getPassword().equals(repassword)) {
+            throw new IllegalStateException("Пароли не совпадают");
+        }
+        User userFromDB = userRepository.findUserByEmail(user.getEmail()).orElse(null);
+        if (userFromDB != null) {
+            throw new IllegalArgumentException(
+                    String.format("Аккаунт с email = %s уже существует!", user.getEmail()));
+        }
+        return user;
     }
 }
