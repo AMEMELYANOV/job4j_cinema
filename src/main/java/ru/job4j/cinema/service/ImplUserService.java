@@ -33,7 +33,7 @@ public class ImplUserService implements UserService {
     /**
      * Возвращает список всех пользователей
      *
-     * @return список всех пользователей
+     * @return {@code List<User>} - список всех пользователей
      */
     @Override
     public List<User> findAll() {
@@ -46,7 +46,7 @@ public class ImplUserService implements UserService {
      *
      * @param id идентификатор пользователя
      * @return пользователя при успешном нахождении
-     * @exception NoSuchElementException, если user не найден
+     * @exception NoSuchElementException, если пользователь не найден
      */
     @Override
     public User findById(int id) {
@@ -85,13 +85,14 @@ public class ImplUserService implements UserService {
      *
      * @param id идентификатор пользователя
      * @return true при успешном удалении
-     * @exception NoSuchElementException, если user не найден
+     * @exception NoSuchElementException, если пользователь не найден
      */
     @Override
     public boolean deleteById(int id) {
         boolean result = userRepository.deleteById(id);
         if (!result) {
-            throw new NoSuchElementException(String.format("Пользователь c id = %d не найден", id));
+            throw new NoSuchElementException(
+                    String.format("Пользователь c id = %d не найден", id));
         }
         return true;
     }
@@ -125,7 +126,7 @@ public class ImplUserService implements UserService {
     @Override
     public User validateUserLogin(User user) {
         User userFromDB = findUserByEmail(user.getEmail());
-        if(!userFromDB.getPassword().equals(user.getPassword())){
+        if (!userFromDB.getPassword().equals(user.getPassword())) {
             throw new IllegalArgumentException("Неправильно введен пароль");
         }
         return userFromDB;
@@ -140,7 +141,8 @@ public class ImplUserService implements UserService {
      * @param user пользователя
      * @return пользователя при успешном при совпадении пароля и почтового адреса
      * @exception IllegalStateException, если пароли пользователя не совпали
-     * @exception IllegalArgumentException, если пользователь с таким же email или паролем сохранен в базе
+     * @exception IllegalArgumentException, если пользователь с таким же email или паролем
+     * сохранен в базе
      */
     @Override
     public User validateUserReg(User user, String repassword) {

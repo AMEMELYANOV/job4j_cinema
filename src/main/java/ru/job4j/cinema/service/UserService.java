@@ -16,7 +16,7 @@ public interface UserService {
     /**
      * Возвращает список всех пользователей
      *
-     * @return список всех пользователей
+     * @return {@code List<User>} - список всех пользователей
      */
     List<User> findAll();
 
@@ -26,7 +26,7 @@ public interface UserService {
      *
      * @param id идентификатор пользователя
      * @return пользователя при успешном нахождении
-     * @exception NoSuchElementException, если user не найден
+     * @exception NoSuchElementException, если пользователь не найден
      */
     User findById(int id);
 
@@ -53,7 +53,7 @@ public interface UserService {
      *
      * @param id идентификатор пользователя
      * @return true при успешном удалении
-     * @exception NoSuchElementException, если user не найден
+     * @exception NoSuchElementException, если пользователь не найден
      */
     boolean deleteById(int id);
 
@@ -89,7 +89,8 @@ public interface UserService {
      * @param user пользователя
      * @return пользователя при успешном при совпадении пароля и почтового адреса
      * @exception IllegalStateException, если пароли пользователя не совпали
-     * @exception IllegalArgumentException, если пользователь с таким же email или паролем сохранен в базе
+     * @exception IllegalArgumentException, если пользователь с таким же email или паролем
+     * сохранен в базе
      */
     User validateUserReg(User user, String repassword);
 }
