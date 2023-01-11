@@ -26,7 +26,7 @@ public interface UserService {
      *
      * @param id идентификатор пользователя
      * @return пользователя при успешном нахождении
-     * @exception NoSuchElementException, если user не найден.
+     * @exception NoSuchElementException, если user не найден
      */
     User findById(int id);
 
@@ -36,7 +36,7 @@ public interface UserService {
      *
      * @param user сохраняемый пользователь
      * @return пользователя при успешном нахождении
-     * @exception IllegalArgumentException, если сохранение пользователя не произошло.
+     * @exception IllegalArgumentException, если сохранение пользователя не произошло
      */
     User save(User user);
 
@@ -53,7 +53,7 @@ public interface UserService {
      *
      * @param id идентификатор пользователя
      * @return true при успешном удалении
-     * @exception NoSuchElementException, если user не найден.
+     * @exception NoSuchElementException, если user не найден
      */
     boolean deleteById(int id);
 
@@ -63,16 +63,19 @@ public interface UserService {
      *
      * @param email почтовый адрес пользователя
      * @return пользователя при успешном нахождении
-     * @exception NoSuchElementException, если пользователь не найден.
+     * @exception NoSuchElementException, если пользователь не найден
      */
     User findUserByEmail(String email);
 
     /**
      * Выполняет проверку пользователя в базе по почтовому адресу и паролю. При успешной
-     * проверке возвращает true, иначе false.
+     * проверке возвращает пользователя извлеченного из базы данных, иначе выбрасывает исключение.
+     * Для нахождения пользователя в базе данных используется метод
+     * {@link ImplUserService#findUserByEmail(String)}.
      *
      * @param user пользователя
-     * @return true при успешном при совпадении пароля и почтового адреса, иначе false
+     * @return пользователя при успешном при совпадении пароля и почтового адреса
+     * @exception IllegalArgumentException, если пароли пользователя не совпали
      */
-    boolean validateUserLogin(User user);
+    User validateUserLogin(User user);
 }

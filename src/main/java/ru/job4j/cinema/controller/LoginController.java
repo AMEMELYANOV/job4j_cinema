@@ -3,15 +3,13 @@ package ru.job4j.cinema.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ru.job4j.cinema.model.User;
 import ru.job4j.cinema.service.UserService;
 import ru.job4j.cinema.util.UserUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.NoSuchElementException;
 
@@ -45,17 +43,9 @@ public class LoginController {
 
     @PostMapping("/login")
     public String loginUser(@ModelAttribute User user, HttpServletRequest req) {
-        try {
-            if (userService.validateUserLogin(user)) {
-                User userFromDB = userService.findUserByEmail(user.getEmail());
-                HttpSession session = req.getSession();
-                session.setAttribute("user", userFromDB);
-            }
-        } catch (NoSuchElementException e) {
-            return "redirect:/login?error=true";
-        }
-
-//        log.info("Method {} run", "loginUser");
+        User userFromDB = userService.validateUserLogin(user);
+        HttpSession session = req.getSession();
+        session.setAttribute("user", userFromDB);
         return "redirect:/shows";
     }
 
@@ -65,5 +55,11 @@ public class LoginController {
 
         log.info("Method {} run", "logoutPage");
         return "redirect:/login?logout=true";
+    }
+
+    @ExceptionHandler(value = {IllegalArgumentException.class, NoSuchElementException.class})
+    public String exceptionHandler(Exception e, HttpServletRequest request, HttpServletResponse response) {
+        log.error(e.getLocalizedMessage());
+        return "redirect:/login?error=true";
     }
 }

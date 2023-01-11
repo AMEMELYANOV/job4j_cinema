@@ -47,7 +47,7 @@ public class ImplUserService implements UserService {
      *
      * @param id идентификатор пользователя
      * @return пользователя при успешном нахождении
-     * @exception NoSuchElementException, если user не найден.
+     * @exception NoSuchElementException, если user не найден
      */
     @Override
     public User findById(int id) {
@@ -62,7 +62,7 @@ public class ImplUserService implements UserService {
      *
      * @param user сохраняемый пользователь
      * @return пользователя при успешном нахождении
-     * @exception IllegalArgumentException, если сохранение пользователя не произошло.
+     * @exception IllegalArgumentException, если сохранение пользователя не произошло
      */
     @Override
     public User save(User user) {
@@ -86,7 +86,7 @@ public class ImplUserService implements UserService {
      *
      * @param id идентификатор пользователя
      * @return true при успешном удалении
-     * @exception NoSuchElementException, если user не найден.
+     * @exception NoSuchElementException, если user не найден
      */
     @Override
     public boolean deleteById(int id) {
@@ -103,7 +103,7 @@ public class ImplUserService implements UserService {
      *
      * @param email почтовый адрес пользователя
      * @return пользователя при успешном нахождении
-     * @exception NoSuchElementException, если пользователь не найден.
+     * @exception NoSuchElementException, если пользователь не найден
      */
     @Override
     public User findUserByEmail(String email) {
@@ -114,14 +114,20 @@ public class ImplUserService implements UserService {
 
     /**
      * Выполняет проверку пользователя в базе по почтовому адресу и паролю. При успешной
-     * проверке возвращает true, иначе false.
+     * проверке возвращает пользователя извлеченного из базы данных, иначе выбрасывает исключение.
+     * Для нахождения пользователя в базе данных используется метод
+     * {@link ImplUserService#findUserByEmail(String)}.
      *
      * @param user пользователя
-     * @return true при успешном при совпадении пароля и почтового адреса, иначе false
+     * @return пользователя при успешном при совпадении пароля и почтового адреса
+     * @exception IllegalArgumentException, если пароли пользователя не совпали
      */
     @Override
-    public boolean validateUserLogin(User user) {
+    public User validateUserLogin(User user) {
         User userFromDB = findUserByEmail(user.getEmail());
-        return userFromDB != null && userFromDB.getPassword().equals(user.getPassword());
+        if(!userFromDB.getPassword().equals(user.getPassword())){
+            throw new IllegalArgumentException("Неправильно введен пароль");
+        }
+        return userFromDB;
     }
 }
